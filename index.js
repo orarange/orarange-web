@@ -12,5 +12,8 @@ app.get('/',function(req,res){
     res.render('index')
 })
 
+app.get('/minecraft/version',function(req,res){
+    res.json({version: "0.1.1"})
+})
 
 app.listen(8080, function () {console.log('Example app listening on port 8080!')});
