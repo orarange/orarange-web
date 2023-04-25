@@ -9,7 +9,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 function logRequest(req, res) {
-    const logFilePath = path.join(__dirname, 'log', 'access.log');
+    const logFilePath = path.join(__dirname, 'logs', 'access.log');
     //ipアドレスとuaと日時を取得
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const ua = req.headers['user-agent'];
@@ -49,6 +49,10 @@ app.get('/',function(req,res){
 
 app.get('/privacy',function(req,res){
     res.render('privacy')
+})
+
+app.get('/minecraft',function(req,res){
+  res.redirect('https://minecraft.jp/servers/server.orarange.com')
 })
 
 app.get('/minecraft/version',function(req,res){
