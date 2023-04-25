@@ -11,11 +11,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 function logRequest(req, res) {
     const logFilePath = path.join(__dirname, 'log', 'access.log');
     //ipアドレスとuaと日時を取得
-    
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const ua = req.headers['user-agent'];
     const time = new Date().toISOString();
-
+  
     // ログのフォーマットを整える
     const logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua}\n`;
 
@@ -26,9 +25,20 @@ function logRequest(req, res) {
     });
   }
   
+  const logCache = {};
+  
   app.use((req, res, next) => {
+    // 10分以内にアクセスがあった場合はスキップする
+    const now = Date.now();
+    const cacheKey = `${req.ip}:${req.originalUrl}`;
+    if (logCache[cacheKey] && (now - logCache[cacheKey]) < 600000) {
+      return next();
+    }
+    
     // ログを書き込む
     logRequest(req, res);
+    // キャッシュに時刻を記録する
+    logCache[cacheKey] = now;
   
     next();
   });
