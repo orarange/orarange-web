@@ -51,6 +51,10 @@ app.get('/privacy',function(req,res){
     res.render('privacy')
 })
 
+app.get('/riot.txt',function(req,res){
+    res.sendfile('riot.txt')
+})
+
 app.get('/minecraft',function(req,res){
   res.redirect('https://minecraft.jp/servers/server.orarange.com')
 })
