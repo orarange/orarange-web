@@ -55,6 +55,11 @@ app.get('/', function (req, res) {
   res.render('index')
 })
 
+app.get('/auth', function (req, res) {
+  res.render('index')
+})
+
+
 app.get('/privacy', function (req, res) {
   res.render('privacy')
 })
