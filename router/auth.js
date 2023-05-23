@@ -50,7 +50,7 @@ router.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     // 認証成功時の処理
-    const filePath = path.join("home","ito","web","logs","access.log");
+    const filePath = path.join("/","home","ito","web","logs","access.log");
     res.sendFile(filePath); // リダイレクト先を適切な場所に変更してください
   }
 );
