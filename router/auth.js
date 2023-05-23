@@ -19,6 +19,18 @@ passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
+passport.deserializeUser((id, done) => {
+  // ユーザーオブジェクトをデータベースなどから取得する処理
+  // idを使ってユーザーを特定し、ユーザーオブジェクトを取得する必要があります
+
+  // ユーザーオブジェクトを取得できた場合
+  done(null, user);
+
+  // ユーザーオブジェクトの取得に失敗した場合
+  done(new Error('Failed to deserialize user'));
+});
+
+
 // Google認証のための設定
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 passport.use(
