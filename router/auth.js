@@ -23,9 +23,9 @@ passport.serializeUser((user, done) => {
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 passport.use(
   new GoogleStrategy({
-    clientID: '350844007784-v8gg3pe57r7q4p8579i1jb9i7beuca3g.apps.googleusercontent.com',
-    clientSecret: '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',
-    callbackURL: 'http://localhost:8080/auth/auth/google/callback'
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "https://orarange.com/auth/google/callback"
   },
   (accessToken, refreshToken, profile, done) => {
     // ユーザーの識別情報を検証する
@@ -41,12 +41,12 @@ passport.use(
 );
 
 // 認証ルートのハンドラー
-router.get('/auth/google',
+router.get('google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
 // 認証コールバックのハンドラー
-router.get('/auth/google/callback',
+router.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     // 認証成功時の処理
