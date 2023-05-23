@@ -33,7 +33,6 @@ app.use((req, res, next) => {
     const lastAccess = new Date(req.cookies['last_access']);
     const now = new Date();
     if (now.getTime() - lastAccess.getTime() < 10 * 60 * 1000) {
-      res.cookie('last_access', new Date().toISOString());
       return next();
     }
   }
@@ -54,15 +53,15 @@ app.get('/privacy', function (req, res) {
 })
 
 app.get('/riot.txt', function (req, res) {
-  res.sendfile('riot.txt')
+  res.sendfiles('riot.txt')
 })
 
 app.get('/minecraft', function (req, res) {
-  res.redirect('https://minecraft.jp/servers/server.orarange.com')
+  res.render('minecraft')
 })
 
-app.get('/minecraft/version', function (req, res) {
-  res.json({ version: "0.1.1" })
+app.get('/tracker', function (req, res) {
+  res.render('tracker')
 })
 
 app.listen(8080, function () { console.log('Example app listening on port 8080!') });
