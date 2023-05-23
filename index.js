@@ -3,12 +3,19 @@ const express = require('express')
 const app = express()
 const fs = require('fs');
 const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+auth = require('./router/auth');
+app.use('/auth', auth);
 
 function logRequest(req, res) {
   const logFilePath = path.join(__dirname, 'logs', 'access.log');
