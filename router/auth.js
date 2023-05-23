@@ -41,7 +41,7 @@ passport.use(
 );
 
 // 認証ルートのハンドラー
-router.get('google',
+router.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
