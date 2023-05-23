@@ -9,12 +9,17 @@
 
 <url>
   <loc>https://orarange.com/</loc>
-  <lastmod>2023-05-23T08:07:21+00:00</lastmod>
+  <lastmod>2023-05-23T09:45:27+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
+  <loc>https://orarange.com/minecraft</loc>
+  <lastmod>2023-05-23T09:45:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
   <loc>https://orarange.com/privacy</loc>
-  <lastmod>2023-05-23T08:07:21+00:00</lastmod>
+  <lastmod>2023-05-23T09:45:27+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 
