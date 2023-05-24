@@ -24,7 +24,7 @@ passport.deserializeUser((id, done) => {
   // idを使ってユーザーを特定し、ユーザーオブジェクトを取得する必要があります
 
   // ユーザーオブジェクトを取得できた場合
-  done(null, user);
+  done(null, id);
 
   // ユーザーオブジェクトの取得に失敗した場合
   done(new Error('Failed to deserialize user'));
