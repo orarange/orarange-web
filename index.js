@@ -26,9 +26,9 @@ function logRequest(req, res) {
 
 	// ログのフォーマットを整える
 	if (ua.match(/bot|crawl|slurp|spider/i)) {
-		const logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua} - bot\n`;
+		let logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua} - bot\n`;
 	} else {
-		const logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua}\n`;
+		let logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua}\n`;
 	}
 	fs.appendFile(logFilePath, logData, (err) => {
 		if (err) {
