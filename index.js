@@ -18,59 +18,62 @@ auth = require('./router/auth');
 app.use('/auth', auth);
 
 function logRequest(req, res) {
-  const logFilePath = path.join(__dirname, 'logs', 'access.log');
-  //ipアドレスとuaと日時を取得
-  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  const ua = req.headers['user-agent'];
-  const time = new Date().toISOString();
+	const logFilePath = path.join(__dirname, 'logs', 'access.log');
+	//ipアドレスとuaと日時を取得
+	const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	const ua = req.headers['user-agent'];
+	const time = new Date().toISOString();
 
-  // ログのフォーマットを整える
-  const logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua}\n`;
-
-  fs.appendFile(logFilePath, logData, (err) => {
-    if (err) {
-      console.error(err);
-    }
-  });
+	// ログのフォーマットを整える
+	if (ua.match(/bot|crawl|slurp|spider/i)) {
+		const logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua} - bot\n`;
+	} else {
+		const logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua}\n`;
+	}
+	fs.appendFile(logFilePath, logData, (err) => {
+		if (err) {
+			console.error(err);
+		}
+	});
 }
 
 app.use((req, res, next) => {
-  //10分いないにアクセスがあったらログを取らない
-  if (req.cookies['last_access']) {
-    const lastAccess = new Date(req.cookies['last_access']);
-    const now = new Date();
-    if (now.getTime() - lastAccess.getTime() < 10 * 60 * 1000) {
-      return next();
-    }
-  }
+	//10分いないにアクセスがあったらログを取らない
+	if (req.cookies['last_access']) {
+		const lastAccess = new Date(req.cookies['last_access']);
+		const now = new Date();
+		if (now.getTime() - lastAccess.getTime() < 10 * 60 * 1000) {
+			return next();
+		}
+	}
 
-  //ログを取る
-  logRequest(req, res);
-  //アクセスした時間を記録
-  res.cookie('last_access', new Date().toISOString());
-  next();
+	//ログを取る
+	logRequest(req, res);
+	//アクセスした時間を記録
+	res.cookie('last_access', new Date().toISOString());
+	next();
 });
 
 app.get('/', function (req, res) {
-  res.render('index')
+	res.render('index')
 })
 
 app.use('/auth', auth);
 
 app.get('/privacy', function (req, res) {
-  res.render('privacy')
+	res.render('privacy')
 })
 
 app.get('/riot.txt', function (req, res) {
-  res.sendfiles('riot.txt')
+	res.sendfiles('riot.txt')
 })
 
 app.get('/minecraft', function (req, res) {
-  res.render('minecraft')
+	res.render('minecraft')
 })
 
 app.get('/tracker', function (req, res) {
-  res.render('tracker')
+	res.render('tracker')
 })
 
 app.listen(8080, function () { console.log('Example app listening on port 8080!') });
