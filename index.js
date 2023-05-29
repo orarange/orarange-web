@@ -23,7 +23,7 @@ function logRequest(req, res) {
 	const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 	const ua = req.headers['user-agent'];
 	const time = new Date().toISOString();
-
+	let logData = '';
 	// ログのフォーマットを整える
 	if (ua.match(/bot|crawl|slurp|spider/i)) {
 		let logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua} - bot\n`;
