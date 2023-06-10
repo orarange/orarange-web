@@ -5,6 +5,7 @@ const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -14,8 +15,13 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+index = require('./router/index');
+auth = require('./router/admin');
+minecraft = require('./router/minecraft');
+tracker = require('./router/tracker');
+privacy = require('./router/privacy');
 auth = require('./router/auth');
-app.use('/auth', auth);
+
 
 function logRequest(req, res) {
   const logFilePath = path.join(__dirname, 'logs', 'access.log');
@@ -51,26 +57,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', function (req, res) {
-  res.render('index')
-})
-
+app.use('/', index);
+app.use('/auth', auth);
+app.use('/minecraft', minecraft);
+app.use('/tracker', tracker);
+app.use('/privacy', privacy);
 app.use('/auth', auth);
 
-app.get('/privacy', function (req, res) {
-  res.render('privacy')
-})
-
-app.get('/riot.txt', function (req, res) {
-  res.sendfiles('riot.txt')
-})
-
-app.get('/minecraft', function (req, res) {
-  res.render('minecraft')
-})
-
-app.get('/tracker', function (req, res) {
-  res.render('tracker')
-})
 
 app.listen(8080, function () { console.log('Example app listening on port 8080!') });
