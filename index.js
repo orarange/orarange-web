@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 index = require('./router/index');
-auth = require('./router/admin');
+//admin = require('./router/admin');
 minecraft = require('./router/minecraft');
 tracker = require('./router/tracker');
 privacy = require('./router/privacy');
@@ -24,37 +24,38 @@ auth = require('./router/auth');
 
 
 function logRequest(req, res) {
-  const logFilePath = path.join(__dirname, 'logs', 'access.log');
-  //ipアドレスとuaと日時を取得
-  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  const ua = req.headers['user-agent'];
-  const time = new Date().toISOString();
+	const logFilePath = path.join(__dirname, 'logs', 'access.log');
+	//ipアドレスとuaと日時を取得
+	const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	const ua = req.headers['user-agent'];
+	const time = new Date().toISOString();
 
-  // ログのフォーマットを整える
-  const logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua}\n`;
-
-  fs.appendFile(logFilePath, logData, (err) => {
-    if (err) {
-      console.error(err);
-    }
-  });
+	// ログのフォーマットを整える
+	const logData = `${time} - [${ip}] - ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${ua}\n`;
+	if (req.originalUrl != "/") {
+		fs.appendFile(logFilePath, logData, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		});
+	}
 }
 
 app.use((req, res, next) => {
-  //10分いないにアクセスがあったらログを取らない
-  if (req.cookies['last_access']) {
-    const lastAccess = new Date(req.cookies['last_access']);
-    const now = new Date();
-    if (now.getTime() - lastAccess.getTime() < 10 * 60 * 1000) {
-      return next();
-    }
-  }
+	//10分いないにアクセスがあったらログを取らない
+	if (req.cookies['last_access']) {
+		const lastAccess = new Date(req.cookies['last_access']);
+		const now = new Date();
+		if (now.getTime() - lastAccess.getTime() < 10 * 60 * 1000) {
+			return next();
+		}
+	}
 
-  //ログを取る
-  logRequest(req, res);
-  //アクセスした時間を記録
-  res.cookie('last_access', new Date().toISOString());
-  next();
+	//ログを取る
+	logRequest(req, res);
+	//アクセスした時間を記録
+	res.cookie('last_access', new Date().toISOString());
+	next();
 });
 
 app.use('/', index);
@@ -63,6 +64,7 @@ app.use('/minecraft', minecraft);
 app.use('/tracker', tracker);
 app.use('/privacy', privacy);
 app.use('/auth', auth);
+//app.use('/admin', admin)
 
 
 app.listen(8080, function () { console.log('Example app listening on port 8080!') });

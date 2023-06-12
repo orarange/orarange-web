@@ -4,6 +4,7 @@ const session = require('express-session');
 const router = express.Router();
 const path = require('path');
 const mongoose = require('mongoose');
+const UserData = require('../models/userdata');
 const {getUserData, createUserData, updateUserData, deleteUserData} = require('./functions/userdata');
 
 
@@ -30,8 +31,8 @@ passport.deserializeUser((id, done) => {
     
     // ユーザーオブジェクトの取得に失敗した場合
     done(new Error('Failed to deserialize user'));
-    }
-);
+});
+
 
 
 // Google認証のための設定
@@ -43,33 +44,7 @@ passport.use(
         callbackURL: "http://localhost:8080/auth/google/callback"
     },
     (accessToken, refreshToken, profile, done) => {
-        // ユーザーの識別情報をデータベースから検索し、存在しない場合は作成する
-        /*getUserData(profile.id).then((user) => {
-            if (user) {
-                // ユーザーが存在する場合
-                return done(null, profile);
-            } else {
-                // ユーザーが存在しない場合
-                createUserData(profile.id, profile.displayName, profile.emails[0].value).then((user) => {
-                    return done(null, profile);
-                }).catch((error) => {
-                    return done(error);
-                });
-            }
-        }
-        ).catch((error) => {
-            return done(error);
-        }
-        );*/
-
-        createUserData(profile).then((user) => {
-            return done(null, profile);
-        }
-        ).catch((error) => {
-            return done(error);
-        }
-        );
-        
+        return done(null, profile);
     }
     )
 );
@@ -82,11 +57,18 @@ router.get('/google',
 // 認証後のコールバック処理
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => {
-        // 認証に成功した場合の処理
-        res.redirect('/');
+    async (req, res) => {
+        const userData = getUserData(req.user.emails[0].value);
+        console.log(userData);
+        if (userData) {
+            res.redirect('/');
+        } /*else {
+            const newUserData = await createUserData(req.user);
+            res.redirect('/');
+        }*/
     }
 );
+
 
 // ログアウト処理
 router.get('/logout', (req, res) => {
