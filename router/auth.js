@@ -44,7 +44,11 @@ passport.use(
         callbackURL: "http://localhost:8080/auth/google/callback"
     },
     (accessToken, refreshToken, profile, done) => {
-        return done(null, profile);
+        //return done(null, profile);
+        if (profile) {
+            return done(null, profile);
+        }
+        return done(null, new Error('Failed to get user profile.'));
     }
     )
 );

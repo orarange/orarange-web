@@ -37,8 +37,8 @@ passport.deserializeUser((id, done) => {
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 passport.use(
   new GoogleStrategy({
-    clientID: "350844007784-v8gg3pe57r7q4p8579i1jb9i7beuca3g.apps.googleusercontent.com",
-    clientSecret: "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",
+    clientID: "",
+    clientSecret: "",
     callbackURL: "https://orarange.com/auth/google/callback"
   },
   (accessToken, refreshToken, profile, done) => {
