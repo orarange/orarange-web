@@ -64,6 +64,9 @@ app.use('/minecraft', minecraft);
 app.use('/tracker', tracker);
 app.use('/privacy', privacy);
 app.use('/auth', auth);
+app.get('.well-known/discord',function(req,res){
+	res.send('dh=ce0c37ed50176d7b1d86dd0d55e16dd225fafdb7')
+})
 //app.use('/admin', admin)
 
 
